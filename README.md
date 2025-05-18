@@ -10,6 +10,15 @@ This project provides a simple autonomous agent that tracks research papers from
 - Interactive browsing and PDF download
 - Command line interface
 
+## Setup
+
+Run the setup script to install dependencies and initialize submodules:
+
+```bash
+./setup_macos.sh
+```
+
+
 ## Usage
 
 Add a topic:

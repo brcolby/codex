@@ -4,14 +4,14 @@ import shutil
 
 from .topics import TopicManager
 from .agent import run_once
-from .search import query_arxiv
+from .search import search_related
 from .summarizer import summarize_pdf
 from .storage import download_pdf
 
 
 def browse_cli(max_results: int = 5) -> None:
     query = input("Enter arXiv search query: ")
-    papers = query_arxiv(query, max_results=max_results)
+    papers = search_related(query, max_results=max_results)
     if not papers:
         print("No papers found.")
         return

@@ -1,7 +1,10 @@
+import os
 import xml.etree.ElementTree as ET
 from typing import List, Dict
 from urllib.parse import urlencode
 from urllib.request import urlopen
+
+import openai
 
 ARXIV_API = 'https://export.arxiv.org/api/query'
 
@@ -35,3 +38,41 @@ def query_arxiv(search_query: str, max_results: int = 5) -> List[Dict[str, str]]
         }
         papers.append(paper)
     return papers
+
+
+def _get_related_terms(query: str) -> List[str]:
+    """Use OpenAI to generate search terms related to *query*."""
+    prompt = (
+        "List up to 5 short search keywords related to the following research "
+        f"topic, separated by commas: {query}"
+    )
+    response = openai.ChatCompletion.create(
+        model=os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=50,
+        temperature=0.3,
+    )
+    text = response["choices"][0]["message"]["content"].strip()
+    terms = [t.strip() for t in text.split(",") if t.strip()]
+    return terms
+
+
+def _is_relevant(text: str, keywords: List[str]) -> bool:
+    text_lower = text.lower()
+    return any(kw.lower() in text_lower for kw in keywords)
+
+
+def search_related(query: str, max_results: int = 5) -> List[Dict[str, str]]:
+    """Search arXiv using *query* and related terms and filter by relevance."""
+    terms = [query] + _get_related_terms(query)
+    keywords = terms
+    results: Dict[str, Dict[str, str]] = {}
+    for term in terms:
+        for paper in query_arxiv(term, max_results=max_results):
+            if paper["id"] in results:
+                continue
+            if _is_relevant(paper["summary"], keywords) or _is_relevant(
+                paper["title"], keywords
+            ):
+                results[paper["id"]] = paper
+    return list(results.values())

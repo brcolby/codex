@@ -6,7 +6,7 @@ This project provides a simple autonomous agent that tracks research papers from
 
 - Manage topics with natural language queries
 - Query arXiv for recent papers
-- Store paper metadata and summaries generated with ChatGPT
+- Store paper metadata and summaries generated with the Mistral API
 - Interactive browsing and PDF download
 - Command line interface
 
@@ -17,6 +17,13 @@ Run the setup script to install dependencies and initialize submodules:
 ```bash
 ./setup_macos.sh
 ```
+
+Optionally, run `./setup_mistral.sh` to store your API key in a `.env` file.
+The agent automatically loads variables from `.env` if present, so after
+running the setup script you can simply keep the file in the project
+directory. Alternatively you can set the `MISTRAL_API_KEY` environment
+variable manually. Optional variables `MISTRAL_MODEL` and
+`MISTRAL_RATE_LIMIT` can be used to configure the model name and rate limit.
 
 
 ## Usage

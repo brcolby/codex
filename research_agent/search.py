@@ -4,7 +4,7 @@ from typing import List, Dict
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
-import openai
+from .mistral_api import chat_completion
 
 ARXIV_API = 'https://export.arxiv.org/api/query'
 
@@ -41,18 +41,14 @@ def query_arxiv(search_query: str, max_results: int = 5) -> List[Dict[str, str]]
 
 
 def _get_related_terms(query: str) -> List[str]:
-    """Use OpenAI to generate search terms related to *query*."""
+    """Use the Mistral API to generate search terms related to *query*."""
     prompt = (
         "List up to 5 short search keywords related to the following research "
         f"topic, separated by commas: {query}"
     )
-    response = openai.ChatCompletion.create(
-        model=os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=50,
-        temperature=0.3,
-    )
-    text = response["choices"][0]["message"]["content"].strip()
+    text = chat_completion([
+        {"role": "user", "content": prompt}
+    ], max_tokens=50, temperature=0.3)
     terms = [t.strip() for t in text.split(",") if t.strip()]
     return terms
 

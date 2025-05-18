@@ -2,3 +2,4 @@ data/
 patch
 research_agent/__pycache__/
 .venv/
+.env

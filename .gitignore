@@ -1,5 +1,6 @@
 data/
-patch
+papers/
 research_agent/__pycache__/
 .venv/
 .env
+patch

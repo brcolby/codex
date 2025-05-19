@@ -54,7 +54,8 @@ def main():
     remove_p.add_argument('name')
 
     sub.add_parser('list', help='list topics')
-    sub.add_parser('run', help='run once')
+    sub.add_parser('batch', help='process saved topics and store results')
+    sub.add_parser('run', help='interactive browser')
     sub.add_parser('browse', help='interactive browser')
 
     args = parser.parse_args()
@@ -67,9 +68,9 @@ def main():
     elif args.cmd == 'list':
         for t in tm.list_topics():
             print(f"{t['name']}: {t['query']}")
-    elif args.cmd == 'run':
+    elif args.cmd == 'batch':
         run_once()
-    elif args.cmd == 'browse':
+    elif args.cmd in {'run', 'browse'}:
         browse_cli()
     else:
         parser.print_help()

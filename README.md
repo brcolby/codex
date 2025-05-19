@@ -40,10 +40,10 @@ List topics:
 python -m research_agent.main list
 ```
 
-Run the agent once (for example weekly via cron):
+Process stored topics and save results (for example weekly via cron):
 
 ```bash
-python -m research_agent.main run
+python -m research_agent.main batch
 ```
 
 Results are stored in `data/<topic>.json`.
@@ -51,5 +51,5 @@ Results are stored in `data/<topic>.json`.
 Browse and download papers interactively:
 
 ```bash
-python -m research_agent.main browse
+python -m research_agent.main run
 ```
